@@ -50,5 +50,7 @@ export default class CurrentMonitorWindowAppSwitcher extends Extension {
             'allocate', original['windowSwitcherAllocate']);
         AppSwitcherPopup.prototype[Gi.gobject_prototype_symbol][Gi.hook_up_vfunc_symbol](
             'allocate', original['appSwitcherAllocate']);
+
+        original = {};
     }
 }
