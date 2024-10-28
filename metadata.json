@@ -1,0 +1,8 @@
+{
+  "name": "Current Monitor Window/App Switcher",
+  "description": "Includes only applications from the current monitor in the Window Switcher and App Switcher",
+  "uuid": "current-monitor-window-app-switcher@thmatosbr",
+  "shell-version": [
+    "46"
+  ]
+}
