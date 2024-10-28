@@ -3,6 +3,8 @@
   "description": "Includes only applications from the current monitor in the Window Switcher and App Switcher",
   "uuid": "current-monitor-window-app-switcher@thmatosbr",
   "shell-version": [
+    "45",
     "46"
-  ]
+  ],
+  "url": "https://github.com/thmatosbr/current-monitor-window-app-switcher"
 }
