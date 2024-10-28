@@ -4,6 +4,10 @@ GNOME shell extension that includes only applications from the current monitor i
 
 ## Installation
 
+### GNOME Shell Extensions website
+
+https://extensions.gnome.org/extension/7460/current-monitor-windowapp-switcher/
+
 ### Manually
 
 1. Clone the repository:
@@ -17,3 +21,7 @@ git clone https://github.com/thmatosbr/current-monitor-window-app-switcher.git c
 ```sh
 gnome-extensions enable current-monitor-window-app-switcher@thmatosbr
 ```
+
+## Versions support
+
+This extension supports GNOME Shell version `45` and later. For earlier versions, you can use the [Current screen only in windows switcher](https://extensions.gnome.org/extension/1437/current-screen-only-for-alternate-tab/) or the [Window/App switcher on active monitor](https://extensions.gnome.org/extension/5568/monitor-window-switcher-2/) extensions.
