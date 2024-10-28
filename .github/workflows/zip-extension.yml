@@ -1,0 +1,29 @@
+name: Zip Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-zip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Read UUID from metadata.json
+        id: read_uuid
+        run: |
+          UUID=$(jq -r '.uuid' metadata.json)
+          echo "uuid=$UUID" >> $GITHUB_ENV
+
+      - name: Create ZIP file
+        run: |
+          zip "${{ env.uuid }}.zip" extension.js metadata.json
+          
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ${{ env.uuid }}.zip
