@@ -4,7 +4,8 @@
   "uuid": "current-monitor-window-app-switcher@thmatosbr",
   "shell-version": [
     "45",
-    "46"
+    "46",
+    "47"
   ],
   "url": "https://github.com/thmatosbr/current-monitor-window-app-switcher"
 }
