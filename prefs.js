@@ -5,8 +5,6 @@ import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/
 
 export default class ExamplePreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-        this._settings = this.getSettings();
-
         const page = new Adw.PreferencesPage({
             title: _('General'),
             icon_name: 'dialog-information-symbolic',
@@ -35,14 +33,16 @@ export default class ExamplePreferences extends ExtensionPreferences {
     }
 
     _addRow(group, choices, title, setting) {
+        const settings = this.getSettings();
+
         let row = new Adw.ComboRow({
             title: title,
             model: choices,
-            selected: this._settings.get_enum(setting)
+            selected: settings.get_enum(setting)
         });
 
         row.connect('notify::selected', widget => {
-            this._settings.set_enum(setting, widget.selected)
+            settings.set_enum(setting, widget.selected)
         });
 
         group.add(row);
