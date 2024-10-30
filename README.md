@@ -2,9 +2,7 @@
 
 GNOME shell extension that includes only applications from the current monitor in the Window Switcher and App Switcher.
 
-<p align="center">
-    <img src="screenshot.png" alt="screenshot" width="600">
-</p>
+![Screenshot](screenshot.png)
 
 ## Installation
 
