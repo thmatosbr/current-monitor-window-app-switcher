@@ -2,9 +2,19 @@ import { Extension, InjectionManager } from 'resource:///org/gnome/shell/extensi
 import { AppSwitcherPopup, WindowSwitcherPopup } from 'resource:///org/gnome/shell/ui/altTab.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
+const MonitorPopup = {
+    CURRENT: 0,
+    PRIMARY: 1,
+};
+
+const MonitorFilter = {
+    CURRENT: 0,
+    ALL: 1,
+};
+
 export default class CurrentMonitorWindowAppSwitcher extends Extension {
     enable() {
-        this._overrider = new Overrider();
+        this._overrider = new Overrider(this.getSettings());
         this._overrider.overrideSwitchers();
     }
 
@@ -15,7 +25,8 @@ export default class CurrentMonitorWindowAppSwitcher extends Extension {
 }
 
 class Overrider {
-    constructor() {
+    constructor(settings) {
+        this._settings = settings;
         this._injectionManager = new InjectionManager();
     }
 
@@ -26,64 +37,61 @@ class Overrider {
 
     destroy() {
         this._injectionManager.clear();
+        this._settings = null;
     }
 
     _overrideWindowSwitcherPopup() {
-        this._injectionManager.overrideMethod(WindowSwitcherPopup.prototype,
-            '_getWindowList', () => {
-                const _getWindowList = WindowSwitcherPopup.prototype._getWindowList;
-                return function () {
-                    let windows = _getWindowList.apply(this, arguments);
-
-                    return windows.filter(w => w.get_monitor() === global.display.get_current_monitor());
-                }
-            }
-        );
-
-        this._injectionManager.overrideMethod(WindowSwitcherPopup.prototype,
-            'vfunc_allocate', () => {
-                const vfunc_allocate = WindowSwitcherPopup.prototype.vfunc_allocate;
-                return function () {
-                    let originalPrimaryMonitor = Main.layoutManager.primaryMonitor;
-                    Main.layoutManager.primaryMonitor = Main.layoutManager.currentMonitor;
-
-                    vfunc_allocate.apply(this, arguments);
-
-                    Main.layoutManager.primaryMonitor = originalPrimaryMonitor;
-                }
-            }
-        );
+        this._injectMethod(WindowSwitcherPopup.prototype, '_getWindowList', this._getWindowList());
+        this._injectMethod(WindowSwitcherPopup.prototype, 'vfunc_allocate', this._allocate(), 'window-popup');
     }
 
     _overrideAppSwitcherPopup() {
-        this._injectionManager.overrideMethod(AppSwitcherPopup.prototype,
-            '_init', () => {
-                const _init = AppSwitcherPopup.prototype._init;
-                return function () {
-                    _init.apply(this, arguments);
+        this._injectMethod(AppSwitcherPopup.prototype, '_init', this._init());
+        this._injectMethod(AppSwitcherPopup.prototype, 'vfunc_allocate', this._allocate(), 'app-popup');
+    }
 
-                    let items = [...this._items];
-                    items.forEach(item => {
-                        if (!item.cachedWindows.some(w => w.get_monitor() === global.display.get_current_monitor())) {
-                            this._switcherList._removeIcon(item.app);
-                        }
-                    });
-                }
+    _injectMethod(proto, methodName, overrideFn, settingName) {
+        this._injectionManager.overrideMethod(proto, methodName, () => {
+            const originalMethod = proto[methodName];
+            return function (...args) {
+                return overrideFn.apply(this, [originalMethod, settingName, ...args]);
+            };
+        });
+    }
+
+    _getWindowList() {
+        const settings = this._settings;
+        return function (originalMethod) {
+            const windows = originalMethod.apply(this, arguments);
+            return settings.get_enum('window-filter') === MonitorFilter.CURRENT
+                ? windows.filter(w => w.get_monitor() === global.display.get_current_monitor())
+                : windows;
+        };
+    }
+
+    _init() {
+        const settings = this._settings;
+        return function (originalMethod) {
+            originalMethod.apply(this, arguments);
+            if (settings.get_enum('app-filter') === MonitorFilter.CURRENT) {
+                let items = [...this._items];
+                items.forEach(item => {
+                    if (!item.cachedWindows.some(w => w.get_monitor() === global.display.get_current_monitor()))
+                        this._switcherList._removeIcon(item.app);
+                });
             }
-        );
+        };
+    }
 
-        this._injectionManager.overrideMethod(AppSwitcherPopup.prototype,
-            'vfunc_allocate', () => {
-                const vfunc_allocate = AppSwitcherPopup.prototype.vfunc_allocate;
-                return function () {
-                    let originalPrimaryMonitor = Main.layoutManager.primaryMonitor;
-                    Main.layoutManager.primaryMonitor = Main.layoutManager.currentMonitor;
-
-                    vfunc_allocate.apply(this, arguments);
-
-                    Main.layoutManager.primaryMonitor = originalPrimaryMonitor;
-                }
+    _allocate() {
+        const settings = this._settings;
+        return function (originalMethod, settingName, box) {
+            const originalPrimaryMonitor = Main.layoutManager.primaryMonitor;
+            if (settings.get_enum(settingName) === MonitorPopup.CURRENT) {
+                Main.layoutManager.primaryMonitor = Main.layoutManager.currentMonitor;
             }
-        );
+            originalMethod.call(this, box);
+            Main.layoutManager.primaryMonitor = originalPrimaryMonitor;
+        };
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <enum id="org.gnome.shell.extensions.current-monitor-window-app-switcher.popup">
+    <value value="0" nick="current"/>
+    <value value="1" nick="primary"/>
+  </enum>
+  <enum id="org.gnome.shell.extensions.current-monitor-window-app-switcher.filter">
+    <value value="0" nick="current"/>
+    <value value="1" nick="all"/>
+  </enum>
+  <schema id="org.gnome.shell.extensions.current-monitor-window-app-switcher" path="/org/gnome/shell/extensions/current-monitor-window-app-switcher/">
+    <key name="window-popup" enum="org.gnome.shell.extensions.current-monitor-window-app-switcher.popup">
+      <default>'current'</default>
+    </key>
+    <key name="app-popup" enum="org.gnome.shell.extensions.current-monitor-window-app-switcher.popup">
+      <default>'current'</default>
+    </key>
+    <key name="app-filter" enum="org.gnome.shell.extensions.current-monitor-window-app-switcher.filter">
+      <default>'current'</default>
+    </key>
+    <key name="window-filter" enum="org.gnome.shell.extensions.current-monitor-window-app-switcher.filter">
+      <default>'current'</default>
+    </key>
+  </schema>
+</schemalist>
