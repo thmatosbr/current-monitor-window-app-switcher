@@ -5,8 +5,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 const DetectionMethod = {
     FOCUSED_WINDOW: 0,
     MOUSE_POSITION: 1,
-}
-
+};
 const MonitorPopup = {
     CURRENT: 0,
     PRIMARY: 1,
@@ -37,7 +36,7 @@ function get_current_monitor(detectionMethod) {
         }
     }
     return global.display.get_current_monitor();
-};
+}
 
 class Overrider {
     constructor(settings) {
