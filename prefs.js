@@ -20,6 +20,12 @@ export default class ExamplePreferences extends ExtensionPreferences {
         page.add(group);
 
         let choices = new Gtk.StringList();
+        choices.append(_('Active Window'));
+        choices.append(_('Mouse Position'));
+
+        this._addRow(group, choices, _('Determine active monitor using'), `${settingGroup}-method`);
+
+        choices = new Gtk.StringList();
         choices.append(_('Current'));
         choices.append(_('Primary'));
 
