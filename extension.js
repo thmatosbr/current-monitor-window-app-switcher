@@ -3,7 +3,7 @@ import { AppSwitcherPopup, WindowSwitcherPopup } from 'resource:///org/gnome/she
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 const DetectionMethod = {
-    ACTIVE_WINDOW: 0,
+    FOCUSED_WINDOW: 0,
     MOUSE_POSITION: 1,
 }
 
@@ -30,7 +30,7 @@ export default class CurrentMonitorWindowAppSwitcher extends Extension {
 }
 
 function get_current_monitor(detectionMethod) {
-    if(detectionMethod === DetectionMethod.ACTIVE_WINDOW) {
+    if(detectionMethod === DetectionMethod.FOCUSED_WINDOW) {
         const focused_window = global.display.get_focus_window();
         if (focused_window !== null) {
             return focused_window.get_monitor();
