@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
+  <enum id="org.gnome.shell.extensions.current-monitor-window-app-switcher.method">
+    <value value="0" nick="window"/>
+    <value value="1" nick="mouse"/>
+  </enum>
   <enum id="org.gnome.shell.extensions.current-monitor-window-app-switcher.popup">
     <value value="0" nick="current"/>
     <value value="1" nick="primary"/>
@@ -9,6 +13,12 @@
     <value value="1" nick="all"/>
   </enum>
   <schema id="org.gnome.shell.extensions.current-monitor-window-app-switcher" path="/org/gnome/shell/extensions/current-monitor-window-app-switcher/">
+    <key name="window-method" enum="org.gnome.shell.extensions.current-monitor-window-app-switcher.method">
+      <default>'mouse'</default>
+    </key>
+    <key name="app-method" enum="org.gnome.shell.extensions.current-monitor-window-app-switcher.method">
+      <default>'mouse'</default>
+    </key>
     <key name="window-popup" enum="org.gnome.shell.extensions.current-monitor-window-app-switcher.popup">
       <default>'current'</default>
     </key>
