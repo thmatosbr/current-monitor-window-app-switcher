@@ -17,9 +17,14 @@ https://extensions.gnome.org/extension/7460/current-monitor-windowapp-switcher/
 cd ~/.local/share/gnome-shell/extensions
 git clone https://github.com/thmatosbr/current-monitor-window-app-switcher.git current-monitor-window-app-switcher@thmatosbr
 ```
-2. Restart GNOME Shell:
-  - Press <kbd>Alt</kbd>+<kbd>F2</kbd> and run the built-in `restart` command
-3. Enable the extension:
+2. Compile extension schemas:
+```sh
+glib-compile-schemas ~/.local/share/gnome-shell/extensions/current-monitor-window-app-switcher@thmatosbr/schemas/
+```
+3. Restart GNOME Shell:
+  - X11: Press <kbd>Alt</kbd>+<kbd>F2</kbd> and run the built-in `restart` command
+  - Wayland: Better Log Out and log back in
+4. Enable the extension:
 ```sh
 gnome-extensions enable current-monitor-window-app-switcher@thmatosbr
 ```
