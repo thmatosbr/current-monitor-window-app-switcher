@@ -88,10 +88,19 @@ class Overrider {
         return function (originalMethod) {
             originalMethod.apply(this, arguments);
             if (settings.get_enum('app-filter') === MonitorFilter.CURRENT) {
+                const currentMonitor = get_current_monitor(settings.get_enum('app-method'));
                 let items = [...this._items];
                 items.forEach(item => {
-                    if (!item.cachedWindows.some(w => w.get_monitor() === get_current_monitor(settings.get_enum('app-method'))))
+                    item.cachedWindows = item.cachedWindows.filter(
+                        w => w.get_monitor() === currentMonitor
+                    );
+                    if (item.cachedWindows.length === 0) {
                         this._switcherList._removeIcon(item.app);
+                    } else if (item.cachedWindows.length === 1) {
+                        const iconIndex = this._switcherList.icons.indexOf(item);
+                        if (iconIndex !== -1 && this._switcherList._arrows[iconIndex])
+                            this._switcherList._arrows[iconIndex].hide();
+                    }
                 });
             }
         };
