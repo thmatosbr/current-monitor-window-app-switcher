@@ -1,5 +1,5 @@
 import { Extension, InjectionManager } from 'resource:///org/gnome/shell/extensions/extension.js';
-import { AppSwitcherPopup, WindowSwitcherPopup } from 'resource:///org/gnome/shell/ui/altTab.js';
+import { AppSwitcherPopup, WindowSwitcherPopup, WindowCyclerPopup } from 'resource:///org/gnome/shell/ui/altTab.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 const DetectionMethod = {
@@ -46,6 +46,7 @@ class Overrider {
 
     overrideSwitchers() {
         this._overrideWindowSwitcherPopup();
+        this._overrideWindowCyclerPopup();
         this._overrideAppSwitcherPopup();
     }
 
@@ -62,6 +63,10 @@ class Overrider {
     _overrideAppSwitcherPopup() {
         this._injectMethod(AppSwitcherPopup.prototype, '_init', this._init());
         this._injectMethod(AppSwitcherPopup.prototype, 'vfunc_allocate', this._allocate(), 'app');
+    }
+
+    _overrideWindowCyclerPopup() {
+        this._injectMethod(WindowCyclerPopup.prototype, '_getWindows', this._getWindowList());
     }
 
     _injectMethod(proto, methodName, overrideFn, settingName) {
